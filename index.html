@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أداة تحرير الفيديو في المتصفح</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-video"></i> أداة تحرير الفيديو في المتصفح</h1>
+            <nav>
+                <ul class="tabs">
+                    <li class="active" data-tab="editor-tab"><i class="fas fa-cut"></i> تقسيم الفيديو</li>
+                    <li data-tab="compressor-tab"><i class="fas fa-compress-alt"></i> ضغط الفيديو</li>
+                    <li data-tab="merge-tab"><i class="fas fa-object-group"></i> دمج الفيديوهات</li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <!-- تبويب تقسيم الفيديو -->
+            <div id="editor-tab" class="tab-content active">
+                <h2><i class="fas fa-cut"></i> تقسيم الفيديو</h2>
+                <div class="form-group">
+                    <label for="split-video-file">اختر ملف الفيديو:</label>
+                    <input type="file" id="split-video-file" accept="video/*">
+                </div>
+
+                <div class="form-group">
+                    <label>طريقة التقسيم:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="split-mode" value="auto" checked> تلقائي (كل جزء ≈ دقيقة)</label>
+                        <label><input type="radio" name="split-mode" value="num_parts"> تحديد عدد الأجزاء: 
+                            <input type="number" id="num-parts" min="1" max="10" value="2" disabled></label>
+                        <label><input type="radio" name="split-mode" value="part_duration"> تحديد مدة كل جزء (ثواني): 
+                            <input type="number" id="part-duration" min="1" max="600" value="60" disabled></label>
+                    </div>
+                </div>
+
+                <button id="split-btn" class="btn"><i class="fas fa-cut"></i> تقسيم الفيديو</button>
+
+                <div id="split-results" class="results hidden">
+                    <h3>الأجزاء الناتجة:</h3>
+                    <div id="split-files-list" class="file-list"></div>
+                </div>
+            </div>
+
+            <!-- تبويب ضغط الفيديو -->
+            <div id="compressor-tab" class="tab-content">
+                <h2><i class="fas fa-compress-alt"></i> ضغط الفيديو</h2>
+                <div class="form-group">
+                    <label for="compress-video-file">اختر ملف الفيديو:</label>
+                    <input type="file" id="compress-video-file" accept="video/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="compression-level">مستوى الضغط:</label>
+                    <select id="compression-level">
+                        <option value="low">منخفض (جودة عالية)</option>
+                        <option value="medium" selected>متوسط (توازن)</option>
+                        <option value="high">عالي (حجم صغير)</option>
+                    </select>
+                </div>
+
+                <button id="compress-btn" class="btn"><i class="fas fa-compress-alt"></i> ضغط الفيديو</button>
+
+                <div id="compress-results" class="results hidden">
+                    <h3>النتيجة:</h3>
+                    <div id="compressed-file" class="file-list"></div>
+                </div>
+            </div>
+
+            <!-- تبويب دمج الفيديوهات -->
+            <div id="merge-tab" class="tab-content">
+                <h2><i class="fas fa-object-group"></i> دمج الفيديوهات</h2>
+                <div class="form-group grid-2">
+                    <div>
+                        <label>الفيديو الأول:</label>
+                        <input type="file" id="merge-video-1" accept="video/*">
+                    </div>
+                    <div>
+                        <label>الفيديو الثاني:</label>
+                        <input type="file" id="merge-video-2" accept="video/*">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="merge-mode">طريقة الدمج:</label>
+                    <select id="merge-mode">
+                        <option value="side_by_side">جنبًا إلى جنب</option>
+                        <option value="top_bottom">أعلى وأسفل</option>
+                    </select>
+                </div>
+
+                <button id="merge-btn" class="btn"><i class="fas fa-object-group"></i> دمج الفيديوهات</button>
+
+                <div id="merge-results" class="results hidden">
+                    <h3>النتيجة:</h3>
+                    <div id="merged-file" class="file-list"></div>
+                </div>
+            </div>
+        </main>
+
+        <div class="status-bar hidden" id="status-bar">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <span id="status-message">جاري المعالجة...</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
